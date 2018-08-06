@@ -23,12 +23,13 @@ def cli(ctx, verbose):
 
 
 @cli.command(help="Build and generate Faust records from Protobuf files in directory")
-@click.argument('directory')
+@click.argument('input_dir')
+@click.argument('output_dir')
 @click.option('--validate', 'validate', flag_value=True, default=False)
 @click.pass_context
-def convert(ctx, directory, validate):
+def convert(ctx, input_dir, output_dir, validate):
     try:
-        pfc = ProtoFaustConverter(directory=directory, validate=validate)
+        pfc = ProtoFaustConverter(input_dir=input_dir, output_dir=output_dir, validate=validate)
         pfc.build()
         pfc.convert()
     except Exception as e:

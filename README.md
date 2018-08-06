@@ -4,6 +4,12 @@ ProtoFaust is a library that generaates Faust record classes from a directory
 of .proto files. It first generates the Protobuf `*_pb2.py` files and then converts
 them to generate `*_pb2_faust.py` files with classes that can be leveraged with Faust.
 
+# Dependencies
+
+- Protobuf Compiler
+- Faust
+- Python 3.6
+
 License
 ----
 
