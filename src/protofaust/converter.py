@@ -1,5 +1,6 @@
 import faust
 import google.protobuf
+import importlib
 import logging
 import os
 import subprocess
@@ -12,20 +13,55 @@ class ProtoFaustConverter(object):
         self._input_dir = input_dir
         self._output_dir = output_dir
         self._validate = validate
+        self._loaded_modules = list()
 
-    def build(self):
+    def run(self):
+        ''' Builds and converts the specified .proto files into Faust records
+        '''
+        self._build()
+        self._load_proto()
+        self._convert()
+
+    def _build(self):
         ''' Generates the *_pb2.py files from a directory of .proto files.
         '''
-
-        # Assert that the input path exists, otherwise no point in spending more time
+        # Assert that the paths exist, otherwise no point in spending more time
         assert os.path.exists(self._input_dir), "Error: The input directory does not exist!"
+        assert os.path.exists(self._output_dir), "Error: The output directory does not exist!"
 
-        proto_in_str = os.path.join(self._input_dir, '*.proto')
-        subprocess.check_call(['protoc', '--proto_path', self._input_dir, '--python_out', self._output_dir, proto_in_str])
+        # Ugh, so this is dumb, but we have to do it since protoc is stupid with regards
+        # to paths and directories with multiple .proto files. We must iterate over
+        # the input directory and find all .proto files, then do a check_call to convert them
+        for filename in os.listdir(self._input_dir):
+            if filename.endswith('.proto'):
+                proto_in_str = os.path.join(self._input_dir, filename)
+                subprocess.check_call(['protoc', '--proto_path', self._input_dir, '--python_out', self._output_dir, proto_in_str])
 
-    def convert(self):
+        logger.info('Generated all _pb2.py files from the .proto directory')
+
+    def _convert(self):
         ''' Converts all loaded Protobuf models into Faust records.
         '''
 
-        # Assert that the output path exists, otherwise no point in spending more time
-        assert os.path.exists(self._output_dir), "Error: The output directory does not exist!"
+    def _load_proto(self):
+        ''' Loads the generated Python classes into memory
+        '''
+        # From the output directory, identify all the _pb2.py files and their
+        # module names, load them into memory
+        prefix = os.path.basename(os.path.normpath(self._output_dir))
+
+        for filename in os.listdir(self._output_dir):
+            if filename.endswith('_pb2.py'):
+                full_path = os.path.join(self._output_dir, filename)
+                module = filename.replace('.py', '')
+                full_module = prefix + "." + module
+
+                # Load the module into memory, track it in a list so that we can
+                # iterate over it for conversion
+                logger.info('Loading Protobuf [' + full_module + '] into memory')
+                _spec = importlib.util.spec_from_file_location(full_module, full_path)
+                _module = importlib.util.module_from_spec(_spec)
+                _spec.loader.exec_module(_module)
+
+                # Append it to the list we track
+                self._loaded_modules.append(_module)

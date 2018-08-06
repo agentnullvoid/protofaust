@@ -30,8 +30,7 @@ def cli(ctx, verbose):
 def convert(ctx, input_dir, output_dir, validate):
     try:
         pfc = ProtoFaustConverter(input_dir=input_dir, output_dir=output_dir, validate=validate)
-        pfc.build()
-        pfc.convert()
+        pfc.run()
     except Exception as e:
         logger.exception('Unhandled Exception')
         ctx.exit(-1)
