@@ -6,9 +6,27 @@ them to generate `*_pb2_faust.py` files with classes that can be leveraged with 
 
 # Dependencies
 
-- Protobuf Compiler
-- Faust
-- Python 3.6
+ProtoFaust leverages several dependencies to work properly:
+
+* [Faust](https://github.com/robinhood/faust) - Faust is a stream processing library, porting the ideas from Kafka Streams to Python.
+* [Protobuf](https://github.com/google/protobuf) - Protocol Buffers (a.k.a., protobuf) are Google's language-neutral, platform-neutral, extensible mechanism for serializing structured data.
+* [Python 3.6]
+
+# Install
+
+To use ProtoFaust, you just need to clone and `pip install` the repository, like so:
+
+`$ git clone https://github.com/agentnullvoid/protofaust.git`\
+`$ cd protofaust`\
+`$ pip install .`
+
+Then, to convert a directory of `.proto` files, you can start the process via:
+
+`$ protofaust convert $ORIGIN_DIR $OUTPUT_DIR`
+
+If you want a verbose output, you can pass in the `--verbose` flag, like so:
+
+`$ protofaust --verbose convert $ORIGIN_DIR $OUTPUT_DIR`
 
 License
 ----
