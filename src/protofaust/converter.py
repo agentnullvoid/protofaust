@@ -15,12 +15,16 @@ class ProtoFaustConverter(object):
         self._validate = validate
         self._loaded_modules = list()
 
+        if self._validate:
+            logger.info('ProtoFaust validation enabled')
+
     def run(self):
         ''' Builds and converts the specified .proto files into Faust records
         '''
         self._build()
         self._load_proto()
         self._convert()
+        self._write_output_records()
 
     def _build(self):
         ''' Generates the *_pb2.py files from a directory of .proto files.

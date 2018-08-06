@@ -1,10 +1,7 @@
 #!/usr/bin/env python
 
 import logging
-import os
-import shutil
 import click
-import sys
 
 from .converter import ProtoFaustConverter
 
@@ -16,6 +13,7 @@ logger = logging.getLogger(__name__)
 @click.pass_context
 def cli(ctx, verbose):
     if verbose:
+        logger.info('Running ProtoFaust in verbose mode')
         logging.basicConfig(level=logging.DEBUG)
     else:
         logging.basicConfig(level=logging.INFO)
