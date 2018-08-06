@@ -39,10 +39,6 @@ class ProtoFaustConverter(object):
 
         logger.info('Generated all _pb2.py files from the .proto directory')
 
-    def _convert(self):
-        ''' Converts all loaded Protobuf models into Faust records.
-        '''
-
     def _load_proto(self):
         ''' Loads the generated Python classes into memory
         '''
@@ -58,10 +54,20 @@ class ProtoFaustConverter(object):
 
                 # Load the module into memory, track it in a list so that we can
                 # iterate over it for conversion
-                logger.info('Loading Protobuf [' + full_module + '] into memory')
                 _spec = importlib.util.spec_from_file_location(full_module, full_path)
                 _module = importlib.util.module_from_spec(_spec)
                 _spec.loader.exec_module(_module)
-
-                # Append it to the list we track
                 self._loaded_modules.append(_module)
+
+        logger.info('Loaded all generated modules into memory')
+
+    def _convert(self):
+        ''' Converts all loaded Protobuf models into Faust records.
+        '''
+        pass
+
+    def _write_output_records(self):
+        ''' Cleans up the output directory from _pb2.py files and writes out
+        the equivalent Faust record Python files
+        '''
+        pass
