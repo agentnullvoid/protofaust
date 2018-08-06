@@ -16,8 +16,8 @@ ProtoFaust leverages several dependencies to work properly:
 
 To use ProtoFaust, you just need to clone and `pip install` the repository, like so:
 
-`$ git clone https://github.com/agentnullvoid/protofaust.git`
-`$ cd protofaust`
+`$ git clone https://github.com/agentnullvoid/protofaust.git`\
+`$ cd protofaust`\
 `$ pip install .`
 
 Then, to convert a directory of `.proto` files, you can start the process via:
